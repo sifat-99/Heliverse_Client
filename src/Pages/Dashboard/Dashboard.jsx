@@ -13,13 +13,13 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Button from "@mui/material/Button";
-import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
-import GroupsIcon from '@mui/icons-material/Groups';
+import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
+import GroupsIcon from "@mui/icons-material/Groups";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { Link, Outlet } from "react-router-dom";
 import { useState, useEffect } from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import Diversity3Icon from '@mui/icons-material/Diversity3';
+import Diversity3Icon from "@mui/icons-material/Diversity3";
 import "./../../Styles/Dashboard.css";
 
 const drawerWidth = 255.5;
@@ -187,12 +187,31 @@ export default function Dashboard() {
                       </ListItemButton>
                     </ListItem>
                   </Link>
-                  <Link to={"allTeams"}>
+                  <Link to={"createTeam"}>
                     <ListItem
                       disablePadding
                       sx={{ "&:hover": { background: "none !imporatant" } }}
                       className={activeItem === 3 ? "itemBackground" : ""}
                       onClick={() => handleListItemClick(3)}
+                    >
+                      <ListItemButton className="listItemButtonStyle">
+                        <ListItemIcon className="menuIcon">
+                          <Diversity3Icon />
+                        </ListItemIcon>
+                        <ListItemText
+                          className="sideBarTitle"
+                          primary="Create Team"
+                          primaryTypographyProps={primaryPropsStyle}
+                        />
+                      </ListItemButton>
+                    </ListItem>
+                  </Link>
+                  <Link to={"allTeams"}>
+                    <ListItem
+                      disablePadding
+                      sx={{ "&:hover": { background: "none !imporatant" } }}
+                      className={activeItem === 4 ? "itemBackground" : ""}
+                      onClick={() => handleListItemClick(4)}
                     >
                       <ListItemButton className="listItemButtonStyle">
                         <ListItemIcon className="menuIcon">

@@ -14,19 +14,23 @@ const AddUser = () => {
         `http://localhost:4001/addUser`,
         NewUser
       );
-
-      console.log(response.data);
-     if(response.data.statusCode === 200){
-      Swal.fire({
-        icon: "success",
-        title: "User added successfully",
-        showConfirmButton: false,
-        timer: 1500,
-      });
-     }
+      if (response.data.statusCode === 200) {
+        Swal.fire({
+          icon: "success",
+          title: "User added successfully",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
     } catch (error) {
-      console.log(error.response);
-      
+      if (error.response.status === 400) {
+        Swal.fire({
+          icon: "error",
+          title: "User already exists",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
     }
     reset();
   };

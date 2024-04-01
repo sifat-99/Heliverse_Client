@@ -5,10 +5,9 @@ import AddUser from "../Components/AddUser/AddUser";
 import Teams from "../Components/Teams/Teams";
 import User from "../Components/Users/User/User";
 import axios from "axios";
+import UserTable from "../Components/Users/UserTable";
 
 const routes = createBrowserRouter([
-
-
   {
     path: "/",
     element: (
@@ -22,32 +21,28 @@ const routes = createBrowserRouter([
         element: <App />,
       },
       {
-        path:"/addUser",
-        element: <AddUser />
+        path: "/addUser",
+        element: <AddUser />,
       },
       {
-        path:'allTeams',
-        element: <Teams />
+        path: "allTeams",
+        element: <Teams />,
       },
       {
-        path: 'users/:id',
+        path:'createTeam',
+        element:<UserTable />
+      },
+      {
+        path: "users/:id",
         element: <User />,
-        loader: async ({params}) => {
-          console.log(params)
+        loader: async ({ params }) => {
+          console.log(params);
           const id = params?.id;
-          console.log(id)
-           const response = axios.get(`http://localhost:4001/users/${id}`);
-           console.log((await response).data)
-           const data = (await response).data;
-
-           console.log(data)
-
-           return data;
-
-
-         
-        }
-      }
+          const response = axios.get(`http://localhost:4001/users/${id}`);
+          const data = (await response).data;
+          return data;
+        },
+      },
     ],
   },
 ]);
