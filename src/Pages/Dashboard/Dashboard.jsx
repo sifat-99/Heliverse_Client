@@ -15,7 +15,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Button from "@mui/material/Button";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import GroupsIcon from "@mui/icons-material/Groups";
-import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+// import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { Link, Outlet } from "react-router-dom";
 import { useState, useEffect } from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -237,14 +237,14 @@ export default function Dashboard() {
                           marginBottom: "12px !important",
                         }}
                       >
-                        <Button
+                        {/* <Button
                           startIcon={<ExitToAppIcon />}
                           fullWidth
                           variant="outlined"
                           className="btnLogoutStyle"
                         >
                           Logout
-                        </Button>
+                        </Button> */}
                       </ListItemButton>
                     </ListItem>
                   </Link>

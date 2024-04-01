@@ -27,16 +27,10 @@ const routes = createBrowserRouter([
       {
         path: "allTeams",
         element: <Teams />,
-        loader: async () => {
-          const response = axios.get("http://localhost:4001/allTeams");
-          const data = (await response).data;
-          return data;
-        }
-
       },
       {
-        path:'createTeam',
-        element:<UserTable />
+        path: "createTeam",
+        element: <UserTable />,
       },
       {
         path: "users/:id",

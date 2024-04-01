@@ -26,6 +26,8 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Box,
+  CircularProgress,
 } from "@mui/material";
 
 const columns = [
@@ -52,6 +54,7 @@ export default function UserTable() {
   const teams = CreateTeam();
   const selectedUser = useSelector(selectSelectedUsers);
   const [allUsers, setAllUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,6 +63,7 @@ export default function UserTable() {
           `http://localhost:4001/users?page=${page + 1}&limit=${rowsPerPage}`
         );
         const { users, totalPages } = response.data;
+        setLoading(false);
         setUsers(users);
         setTotalPages(totalPages);
         const allUsersResponse = await axios.get(
@@ -138,158 +142,185 @@ export default function UserTable() {
 
   return (
     <>
-      <Paper sx={{ width: "90%" }} className="mx-auto">
-        <Container className="!flex gap-2 !flex-col lg:!flex-row ">
-          <TextField
-            label="Search"
-            variant="outlined"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            fullWidth
-            margin="normal"
-          />
-          <FormControl fullWidth margin="normal">
-            <InputLabel>Domain</InputLabel>
-            <Select
-              value={domainFilter}
-              onChange={(e) => setDomainFilter(e.target.value)}
-            >
-              <MenuItem value="">All</MenuItem>
-              <MenuItem value="Sales">Sales</MenuItem>
-              <MenuItem value="Finance">Finance</MenuItem>
-              <MenuItem value="Marketing">Marketing</MenuItem>
-              <MenuItem value="IT">IT</MenuItem>
-              <MenuItem value="Management">Management</MenuItem>
-              <MenuItem value="UI Designing">UI Designing</MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl fullWidth margin="normal">
-            <InputLabel>Gender</InputLabel>
-            <Select
-              value={genderFilter}
-              onChange={(e) => setGenderFilter(e.target.value)}
-            >
-              <MenuItem value="">All</MenuItem>
-              <MenuItem value="Male">Male</MenuItem>
-              <MenuItem value="Female">Female</MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl fullWidth margin="normal">
-            <InputLabel>Availability</InputLabel>
-            <Select
-              value={availabilityFilter}
-              onChange={(e) => setAvailabilityFilter(e.target.value)}
-            >
-              <MenuItem value="">All</MenuItem>
-              <MenuItem value={true}>Available</MenuItem>
-              <MenuItem value={false}>Not Available</MenuItem>
-            </Select>
-          </FormControl>
-        </Container>
-        <TableContainer
-          sx={{ maxHeight: 600 }}
-          className=" !border-t-2 !border-black"
+      {loading ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignContent: "center",
+            marginTop: "30px",
+          }}
         >
-          <Table stickyHeader aria-label="sticky table">
-            <TableHead>
-              <TableRow>
-                {columns.map((column, index) => (
-                  <TableCell key={index} align="center">
-                    {column}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            {searchQuery ||
-            domainFilter ||
-            genderFilter ||
-            availabilityFilter ? (
-              <TableBody>
-                {filteredUsers.map((row, rowIndex) => (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
-                    <TableCell align="center" key={row._id}>
-                      <Checkbox
-                        checked={selectedUsers.includes(row)}
-                        onChange={(event) => handleCheckboxChange(event, row)}
-                        disabled={!row.available}
-                      />
+          <CircularProgress />
+          <br />
+          <Typography variant="h5" className="!ml-4">
+            Loading...
+          </Typography>
+        </Box>
+      ) : (
+        <Paper sx={{ width: "90%" }} className="mx-auto">
+          <Container className="!flex gap-2 !flex-col lg:!flex-row ">
+            <TextField
+              label="Search"
+              variant="outlined"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              fullWidth
+              margin="normal"
+            />
+            <FormControl fullWidth margin="normal">
+              <InputLabel>Domain</InputLabel>
+              <Select
+                value={domainFilter}
+                onChange={(e) => setDomainFilter(e.target.value)}
+              >
+                <MenuItem value="">All</MenuItem>
+                <MenuItem value="Sales">Sales</MenuItem>
+                <MenuItem value="Finance">Finance</MenuItem>
+                <MenuItem value="Marketing">Marketing</MenuItem>
+                <MenuItem value="IT">IT</MenuItem>
+                <MenuItem value="Management">Management</MenuItem>
+                <MenuItem value="UI Designing">UI Designing</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl fullWidth margin="normal">
+              <InputLabel>Gender</InputLabel>
+              <Select
+                value={genderFilter}
+                onChange={(e) => setGenderFilter(e.target.value)}
+              >
+                <MenuItem value="">All</MenuItem>
+                <MenuItem value="Male">Male</MenuItem>
+                <MenuItem value="Female">Female</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl fullWidth margin="normal">
+              <InputLabel>Availability</InputLabel>
+              <Select
+                value={availabilityFilter}
+                onChange={(e) => setAvailabilityFilter(e.target.value)}
+              >
+                <MenuItem value="">All</MenuItem>
+                <MenuItem value={true}>Available</MenuItem>
+                <MenuItem value={false}>Not Available</MenuItem>
+              </Select>
+            </FormControl>
+          </Container>
+          <TableContainer
+            sx={{ maxHeight: 600 }}
+            className=" !border-t-2 !border-black"
+          >
+            <Table stickyHeader aria-label="sticky table">
+              <TableHead>
+                <TableRow>
+                  {columns.map((column, index) => (
+                    <TableCell key={index} align="center">
+                      {column}
                     </TableCell>
-                    {columns.slice(1).map((column, columnIndex) => (
-                      <TableCell key={columnIndex} align="center">
-                        {column === "Image" ? (
-                          <img
-                            src={row.avatar}
-                            alt={row.first_name}
-                            width="50"
-                          />
-                        ) : column === "Name" ? (
-                          row.first_name + " " + row.last_name
-                        ) : column === "Availability" ? (
-                          row.available ? (
-                            <CheckIcon color="success" />
-                          ) : (
-                            <ClearIcon color="error" />
-                          )
-                        ) : (
-                          row[column.toLowerCase()]
-                        )}
+                  ))}
+                </TableRow>
+              </TableHead>
+              {searchQuery ||
+              domainFilter ||
+              genderFilter ||
+              availabilityFilter ? (
+                <TableBody>
+                  {filteredUsers.map((row, rowIndex) => (
+                    <TableRow
+                      hover
+                      role="checkbox"
+                      tabIndex={-1}
+                      key={rowIndex}
+                    >
+                      <TableCell align="center" key={row._id}>
+                        <Checkbox
+                          checked={selectedUsers.includes(row)}
+                          onChange={(event) => handleCheckboxChange(event, row)}
+                          disabled={!row.available}
+                        />
                       </TableCell>
-                    ))}
-                  </TableRow>
-                ))}
-              </TableBody>
-            ) : (
-              <TableBody>
-                {users.map((row, rowIndex) => (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
-                    <TableCell align="center" key={row._id}>
-                      <Checkbox
-                        checked={selectedUsers.includes(row) ? true : false}
-                        onChange={(event) => handleCheckboxChange(event, row)}
-                        disabled={!row.available}
-                      />
-                    </TableCell>
-                    {columns.slice(1).map((column, columnIndex) => (
-                      <TableCell key={columnIndex} align="center">
-                        {column === "Image" ? (
-                          <img
-                            src={row.avatar}
-                            alt={row.first_name}
-                            width="50"
-                          />
-                        ) : column === "Name" ? (
-                          row.first_name + " " + row.last_name
-                        ) : column === "Availability" ? (
-                          row.available ? (
-                            <CheckIcon color="success" />
+                      {columns.slice(1).map((column, columnIndex) => (
+                        <TableCell key={columnIndex} align="center">
+                          {column === "Image" ? (
+                            <img
+                              src={row.avatar}
+                              alt={row.first_name}
+                              width="50"
+                            />
+                          ) : column === "Name" ? (
+                            row.first_name + " " + row.last_name
+                          ) : column === "Availability" ? (
+                            row.available ? (
+                              <CheckIcon color="success" />
+                            ) : (
+                              <ClearIcon color="error" />
+                            )
                           ) : (
-                            <ClearIcon color="error" />
-                          )
-                        ) : (
-                          row[column.toLowerCase()]
-                        )}
+                            row[column.toLowerCase()]
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+                </TableBody>
+              ) : (
+                <TableBody>
+                  {users.map((row, rowIndex) => (
+                    <TableRow
+                      hover
+                      role="checkbox"
+                      tabIndex={-1}
+                      key={rowIndex}
+                    >
+                      <TableCell align="center" key={row._id}>
+                        <Checkbox
+                          checked={selectedUsers.includes(row) ? true : false}
+                          onChange={(event) => handleCheckboxChange(event, row)}
+                          disabled={!row.available}
+                        />
                       </TableCell>
-                    ))}
-                  </TableRow>
-                ))}
-              </TableBody>
-            )}
-          </Table>
-        </TableContainer>
-        <Container className="!flex !flex-row !items-center !justify-between !mt-4">
-          <Typography className="!ml-2">Page: {page + 1}</Typography>
-          <TablePagination
-            rowsPerPageOptions={[20, 50, 100]}
-            component="div"
-            count={totalPages * rowsPerPage}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-        </Container>
-        <div>{teams}</div>
-      </Paper>
+                      {columns.slice(1).map((column, columnIndex) => (
+                        <TableCell key={columnIndex} align="center">
+                          {column === "Image" ? (
+                            <img
+                              src={row.avatar}
+                              alt={row.first_name}
+                              width="50"
+                            />
+                          ) : column === "Name" ? (
+                            row.first_name + " " + row.last_name
+                          ) : column === "Availability" ? (
+                            row.available ? (
+                              <CheckIcon color="success" />
+                            ) : (
+                              <ClearIcon color="error" />
+                            )
+                          ) : (
+                            row[column.toLowerCase()]
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+                </TableBody>
+              )}
+            </Table>
+          </TableContainer>
+          <Container className="!flex !flex-row !items-center !justify-between !mt-4">
+            <Typography className="!ml-2">Page: {page + 1}</Typography>
+            <TablePagination
+              rowsPerPageOptions={[20, 50, 100]}
+              component="div"
+              count={totalPages * rowsPerPage}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </Container>
+          <div>{teams}</div>
+        </Paper>
+      )}
     </>
   );
 }
