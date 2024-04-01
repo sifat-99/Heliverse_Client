@@ -60,14 +60,14 @@ export default function UserTable() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4001/users?page=${page + 1}&limit=${rowsPerPage}`
+          `https://heliverse-server-khaki.vercel.app/users?page=${page + 1}&limit=${rowsPerPage}`
         );
         const { users, totalPages } = response.data;
         setLoading(false);
         setUsers(users);
         setTotalPages(totalPages);
         const allUsersResponse = await axios.get(
-          `http://localhost:4001/allUsers`
+          `https://heliverse-server-khaki.vercel.app/allUsers`
         );
         setAllUsers(allUsersResponse.data);
       } catch (error) {

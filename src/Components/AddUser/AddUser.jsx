@@ -11,7 +11,7 @@ const AddUser = () => {
     };
     try {
       const response = await axios.post(
-        `http://localhost:4001/addUser`,
+        `https://heliverse-server-khaki.vercel.app/addUser`,
         NewUser
       );
       if (response.data.statusCode === 200) {

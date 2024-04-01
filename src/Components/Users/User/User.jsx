@@ -12,7 +12,7 @@ const User = () => {
     };
     try {
       axios
-        .put(`http://localhost:4001/updateUser/${userData._id}`, newData)
+        .put(`https://heliverse-server-khaki.vercel.app/updateUser/${userData._id}`, newData)
         .then((res) => {
           console.log(res);
           if (res.data.statusCode === 200) {

@@ -19,7 +19,7 @@ const Teams = () => {
     console.log(id);
     try {
       await axios
-        .delete(`http://localhost:4001/deleteTeam/${id}`)
+        .delete(`https://heliverse-server-khaki.vercel.app/deleteTeam/${id}`)
         .then((res) => {
           {
             res.status == 200 &&
@@ -30,7 +30,7 @@ const Teams = () => {
                 timer: 1500,
               });
           }
-          axios.get("http://localhost:4001/allTeams").then((res) => {
+          axios.get("https://heliverse-server-khaki.vercel.app/allTeams").then((res) => {
             setLoading(false);
             setAllTeams(res.data);
           });
@@ -40,7 +40,7 @@ const Teams = () => {
     }
   };
   useEffect(() => {
-    axios.get("http://localhost:4001/allTeams").then((res) => {
+    axios.get("https://heliverse-server-khaki.vercel.app/allTeams").then((res) => {
       setAllTeams(res.data);
       setLoading(false);
     });

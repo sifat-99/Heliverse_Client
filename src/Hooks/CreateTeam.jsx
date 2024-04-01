@@ -42,7 +42,7 @@ export default function CreateTeam() {
         name: teamName,
         members: data,
       };
-      await axios.post("http://localhost:4001/addTeam", team).then((res) => {
+      await axios.post("https://heliverse-server-khaki.vercel.app/addTeam", team).then((res) => {
         console.log(res);
 
         toast.success("Team created successfully");

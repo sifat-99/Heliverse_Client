@@ -38,7 +38,7 @@ const routes = createBrowserRouter([
         loader: async ({ params }) => {
           console.log(params);
           const id = params?.id;
-          const response = axios.get(`http://localhost:4001/users/${id}`);
+          const response = axios.get(`https://heliverse-server-khaki.vercel.app/users/${id}`);
           const data = (await response).data;
           return data;
         },

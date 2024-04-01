@@ -43,11 +43,11 @@ export default function Users() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4001/users?page=${page}&limit=${rowsPerPage}`
+          `https://heliverse-server-khaki.vercel.app/users?page=${page}&limit=${rowsPerPage}`
         );
 
         const allUsersResponse = await axios.get(
-          `http://localhost:4001/allUsers`
+          `https://heliverse-server-khaki.vercel.app/allUsers`
         );
         setAllUsers(allUsersResponse.data);
         setLoading(false);
@@ -68,7 +68,7 @@ export default function Users() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:4001/deleteUser/${id}`);
+      await axios.delete(`https://heliverse-server-khaki.vercel.app/deleteUser/${id}`);
       Swal.fire({
         icon: "success",
         title: "User deleted successfully",
@@ -76,7 +76,7 @@ export default function Users() {
         timer: 1500,
       });
       const response = await axios.get(
-        `http://localhost:4001/users?page=${page}&limit=${rowsPerPage}`
+        `https://heliverse-server-khaki.vercel.app/users?page=${page}&limit=${rowsPerPage}`
       );
       const { users, totalPages } = response.data;
       setUsers(users);
