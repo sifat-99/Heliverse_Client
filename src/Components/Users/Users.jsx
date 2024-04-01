@@ -107,14 +107,23 @@ export default function Users() {
   return (
     <>
       {loading ? (
-        <Box sx={{ display: "flex", justifyContent:'center', alignContent:'center', marginTop:'30px' }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignContent: "center",
+            marginTop: "30px",
+          }}
+        >
           <CircularProgress />
           <br />
-          <Typography variant="h5" className="!ml-4">Loading...</Typography>
+          <Typography variant="h5" className="!ml-4">
+            Loading...
+          </Typography>
         </Box>
       ) : (
         <Paper sx={{ width: "90%" }} className="mx-auto">
-          <Container className="!flex gap-2 !flex-col lg:!flex-row !mb-4">
+          <Container className="!flex lg:!gap-2 !flex-col lg:!flex-row !mb-4">
             <TextField
               label="Search"
               variant="outlined"
@@ -164,7 +173,7 @@ export default function Users() {
           {searchQuery || domainFilter || genderFilter || availabilityFilter ? (
             <TableContainer
               sx={{ maxHeight: 600 }}
-              className="!grid !grid-cols-1 md:!grid-cols-2 lg:!grid-cols-3 !gap-8"
+              className="!grid !grid-cols-1 md:!grid-cols-2 lg:!grid-cols-3 !gap-8 !border-t-2 border-black"
             >
               {filteredUsers.map((user) => {
                 return (
@@ -200,7 +209,7 @@ export default function Users() {
                     <CardActions className="!flex !justify-between !items-center">
                       <Link to={`/users/${user?._id}`}>
                         <button className="!bg-blue-500 !hover:bg-blue-700 !text-white !font-bold !py-2 !px-4 !rounded">
-                          View Profile
+                          Update Profile
                         </button>
                       </Link>
 
@@ -220,7 +229,7 @@ export default function Users() {
           ) : (
             <TableContainer
               sx={{ maxHeight: 600 }}
-              className="!grid !grid-cols-1 md:!grid-cols-2 lg:!grid-cols-3 !gap-8"
+              className="!grid !grid-cols-1 md:!grid-cols-2 lg:!grid-cols-3 !gap-8 !border-t-2 border-black"
             >
               {users.map((user) => {
                 return (
@@ -256,7 +265,7 @@ export default function Users() {
                     <CardActions className="!flex !justify-between !items-center">
                       <Link to={`/users/${user?._id}`}>
                         <button className="!bg-blue-500 !hover:bg-blue-700 !text-white !font-bold !py-2 !px-4 !rounded">
-                          View Profile
+                          Update Profile
                         </button>
                       </Link>
 
