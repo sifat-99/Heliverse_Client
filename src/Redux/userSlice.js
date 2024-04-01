@@ -12,12 +12,16 @@ const userSlice = createSlice({
         addUserToTeam: (state, action) => {
             const data = action.payload;
             state.teamUser.push(data);
+        },
+        removeUserFromTeam: (state, action) => {
+            const data = action.payload;
+            state.teamUser = state.teamUser.filter((user) => user._id !== data._id);
         }
         
     }
 });
 
-export const { addUserToTeam} = userSlice.actions;
+export const { addUserToTeam, removeUserFromTeam} = userSlice.actions;
 
 export const selectSelectedUsers = (state) => state.user;
 

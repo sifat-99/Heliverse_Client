@@ -10,9 +10,14 @@ import {
   CardContent,
   CardMedia,
   Container,
+  FormControl,
   Grid,
+  InputLabel,
+  MenuItem,
   Pagination,
+  Select,
   Stack,
+  TextField,
   Typography,
 } from "@mui/material";
 import { Link } from "react-router-dom";
@@ -24,6 +29,11 @@ export default function Users() {
   const [rowsPerPage, setRowsPerPage] = useState(20);
   const [totalPages, setTotalPages] = useState(1);
   const [users, setUsers] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [domainFilter, setDomainFilter] = useState("");
+  const [genderFilter, setGenderFilter] = useState("");
+  const [availabilityFilter, setAvailabilityFilter] = useState("");
+  const [allUsers, setAllUsers] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,6 +41,11 @@ export default function Users() {
         const response = await axios.get(
           `http://localhost:4001/users?page=${page}&limit=${rowsPerPage}`
         );
+
+        const allUsersResponse = await axios.get(
+          `http://localhost:4001/allUsers`
+        );
+        setAllUsers(allUsersResponse.data);
         const { users, totalPages } = response.data;
         setUsers(users);
         setTotalPages(totalPages);
@@ -47,22 +62,14 @@ export default function Users() {
   };
 
   const handleDelete = async (id) => {
-    console.log(id);
-
     try {
-      await axios
-        .delete(`http://localhost:4001/deleteUser/${id}`)
-        .then((res) => {
-          console.log(res);
-          if (res.data.deletedCount === 1) {
-            Swal.fire({
-              icon: "success",
-              title: "User deleted successfully",
-              showConfirmButton: false,
-              timer: 1500,
-            });
-          }
-        });
+      await axios.delete(`http://localhost:4001/deleteUser/${id}`);
+      Swal.fire({
+        icon: "success",
+        title: "User deleted successfully",
+        showConfirmButton: false,
+        timer: 1500,
+      });
       const response = await axios.get(
         `http://localhost:4001/users?page=${page}&limit=${rowsPerPage}`
       );
@@ -74,10 +81,131 @@ export default function Users() {
     }
   };
 
+  const filteredUsers = allUsers.filter((user) => {
+    if (searchQuery !== "" &&
+        !(
+          user.first_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          user.last_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          user.email.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+    ) {
+      return false;
+    }
+    if (domainFilter !== "" && user.domain !== domainFilter) return false;
+    if (genderFilter !== "" && user.gender !== genderFilter) return false;
+    if (availabilityFilter !== "" && user.available !== availabilityFilter) return false;
+    return true;
+  });
+
   return (
     <Paper sx={{ width: "90%" }} className="mx-auto">
-      <TableContainer
-        sx={{ maxHeight: 700 }}
+        <Container className="!flex gap-2 !flex-col lg:!flex-row !mb-4">
+          <TextField
+            label="Search"
+            variant="outlined"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            fullWidth
+            margin="normal"
+          />
+          <FormControl fullWidth margin="normal">
+            <InputLabel>Domain</InputLabel>
+            <Select
+              value={domainFilter}
+              onChange={(e) => setDomainFilter(e.target.value)}
+            >
+              <MenuItem value="">All</MenuItem>
+              <MenuItem value="Sales">Sales</MenuItem>
+              <MenuItem value="Finance">Finance</MenuItem>
+              <MenuItem value="Marketing">Marketing</MenuItem>
+              <MenuItem value="IT">IT</MenuItem>
+              <MenuItem value="Management">Management</MenuItem>
+              <MenuItem value="UI Designing">UI Designing</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl fullWidth margin="normal">
+            <InputLabel>Gender</InputLabel>
+            <Select
+              value={genderFilter}
+              onChange={(e) => setGenderFilter(e.target.value)}
+            >
+              <MenuItem value="">All</MenuItem>
+              <MenuItem value="Male">Male</MenuItem>
+              <MenuItem value="Female">Female</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl fullWidth margin="normal">
+            <InputLabel>Availability</InputLabel>
+            <Select
+              value={availabilityFilter}
+              onChange={(e) => setAvailabilityFilter(e.target.value)}
+            >
+              <MenuItem value="">All</MenuItem>
+              <MenuItem value={true}>Available</MenuItem>
+              <MenuItem value={false}>Not Available</MenuItem>
+            </Select>
+          </FormControl>
+        </Container>
+      {
+        searchQuery || domainFilter || genderFilter || availabilityFilter ? (
+          <TableContainer
+        sx={{ maxHeight: 600 }}
+        className="!grid !grid-cols-3 !gap-8"
+      >
+        {filteredUsers.map((user) => {
+          return (
+            <Card key={user._id} className="!w-full">
+              <CardMedia
+                sx={{ height: 140, width: 140 }}
+                image={user?.avatar}
+                title="green iguana"
+                className="!mx-auto !no-underline"
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                  {user?.first_name} {user?.last_name}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Email: {user?.email}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Gender: {user?.gender}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Domain: {user?.domain}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Availability:{" "}
+                  {user?.available ? (
+                    <CheckIcon className="text-green-600" />
+                  ) : (
+                    <ClearIcon className="text-red-600" />
+                  )}
+                </Typography>
+              </CardContent>
+              <CardActions className="!flex !justify-between !items-center">
+                <Link to={`/users/${user?._id}`}>
+                  <button className="!bg-blue-500 !hover:bg-blue-700 !text-white !font-bold !py-2 !px-4 !rounded">
+                    View Profile
+                  </button>
+                </Link>
+
+                <button
+                  onClick={() => {
+                    handleDelete(user._id);
+                  }}
+                  className="!bg-yellow-400 !hover:bg-yellow-700 !text-white !font-bold !py-2 !px-4 !rounded"
+                >
+                  <DeleteForeverIcon className="text-red-700" />
+                </button>
+              </CardActions>
+            </Card>
+          );
+        })}
+      </TableContainer>
+        ):(
+          <TableContainer
+        sx={{ maxHeight: 600 }}
         className="!grid !grid-cols-3 !gap-8"
       >
         {users.map((user) => {
@@ -131,6 +259,8 @@ export default function Users() {
           );
         })}
       </TableContainer>
+        )
+      }
       <Stack spacing={2} className="flex w-full">
         <Typography className="!ml-2 !mt-4">Page: {page}</Typography>
         <Grid container justifyContent="center">

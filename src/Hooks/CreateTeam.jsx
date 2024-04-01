@@ -13,9 +13,10 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
-
+import axios from "axios";
+import Swal from "sweetalert2";
+import toast from "react-hot-toast";
 const columns = ["Image", "Name", "Email", "Gender", "Domain", "Availability"];
-
 const style = {
   position: "absolute",
   top: "50%",
@@ -35,16 +36,29 @@ export default function CreateTeam() {
     setOpen(!open);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    try {
+      const team = {
+        name: teamName,
+        members: data,
+      };
+      await axios.post("http://localhost:4001/addTeam", team).then((res) => {
+        console.log(res);
 
-    // TODO: Add the selected users to the team
-    const team = {
-      name: teamName,
-      members: data,
+        toast.success("Team created successfully");
+
+        handleOpen();
+      });
+    } catch (error) {
+      console.error("Error creating team:", error);
+
+      Swal.fire({
+        icon: "error",
+        title: "Failed to create team",
+        text: "An error occurred while creating the team.",
+        confirmButtonText: "Ok",
+      });
     }
-    console.log(team)
-    alert("Team Created Successfully")
-    handleClose()
   };
 
   const [page, setPage] = React.useState(0);
@@ -68,7 +82,12 @@ export default function CreateTeam() {
 
   return (
     <div>
-      <Button onClick={handleOpen}>Create Team</Button>
+      <Button
+        className="!btn !bg-green-200 !m-4 !text-black !font-bold"
+        onClick={handleOpen}
+      >
+        Create Team
+      </Button>
       <Modal
         open={open}
         onClose={handleClose}

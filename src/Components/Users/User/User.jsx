@@ -2,12 +2,9 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useLoaderData } from "react-router-dom";
 import Swal from "sweetalert2";
-
 const User = () => {
   const userData = useLoaderData();
-
   const { register, handleSubmit } = useForm();
-
   const onSubmit = async (data) => {
     const newData = {
       ...data,
