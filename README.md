@@ -49,15 +49,8 @@ This is a full-stack web application built using React.js for the frontend and N
 
 ### Frontend
 1. Clone this repository.
-2. Navigate to the `frontend` directory.
 3. Install dependencies using `npm install`.
 4. Start the development server using `npm run dev`.
-
-### Backend
-1. Navigate to the `backend` directory.
-2. Install dependencies using `npm install`.
-3. Set up your MongoDB database and provide the connection URI in a `.env` file.
-4. Start the server using `nodemon index.js`.
 
 
 ## Live Link
