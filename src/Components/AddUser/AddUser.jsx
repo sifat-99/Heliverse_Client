@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useForm } from "react-hook-form";
+import Swal from "sweetalert2";
 
 const AddUser = () => {
   const { register, handleSubmit, reset } = useForm();
@@ -15,7 +16,14 @@ const AddUser = () => {
       );
 
       console.log(response.data);
-     
+     if(response.data.statusCode === 200){
+      Swal.fire({
+        icon: "success",
+        title: "User added successfully",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+     }
     } catch (error) {
       console.log(error.response);
       
